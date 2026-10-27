@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tiny Indic TTS</title>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: var(--tg-theme-bg-color, #ffffff);
+      --text: var(--tg-theme-text-color, #202124);
+      --button: var(--tg-theme-button-color, #2481cc);
+      --button-text: var(--tg-theme-button-text-color, #ffffff);
+      --muted: var(--tg-theme-hint-color, #777777);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 24px 18px;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, sans-serif;
+    }
+
+    main {
+      max-width: 480px;
+      margin: 40px auto;
+      text-align: center;
+    }
+
+    .logo {
+      font-size: 56px;
+      margin-bottom: 12px;
+    }
+
+    h1 { font-size: 27px; }
+
+    p {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 15px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--button);
+      color: var(--button-text);
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    #status {
+      margin-top: 20px;
+      overflow-wrap: anywhere;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <div class="logo">🎙️</div>
+    <h1>Tiny Indic TTS</h1>
+    <p>Indian languages, one simple interface.</p>
+
+    <button id="startButton">Open Mini App</button>
+    <p id="status">Loading Telegram Mini App...</p>
+  </main>
+
+  <script>
+    const app = window.Telegram?.WebApp;
+    const status = document.getElementById("status");
+    const button = document.getElementById("startButton");
+
+    if (app) {
+      app.ready();
+      app.expand();
+
+      const user = app.initDataUnsafe?.user;
+      status.textContent = user
+        ? `Welcome, ${user.first_name}!`
+        : "Telegram Mini App is ready.";
+    } else {
+      status.textContent = "Opened in a normal browser.";
+    }
+
+    button.addEventListener("click", () => {
+      if (app) {
+        app.showAlert("Tiny Indic TTS Mini App is working!");
+      } else {
+        status.textContent = "The interface is working in browser mode.";
+      }
+    });
+  </script>
+</body>
+</html>
