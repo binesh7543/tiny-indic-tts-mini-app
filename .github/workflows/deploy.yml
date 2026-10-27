@@ -1,5 +1,5 @@
 
-name: Telegram Serverless CLI Setup Check
+name: Deploy Telegram Mini App
 
 on:
   workflow_dispatch:
@@ -7,8 +7,11 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
-  tgcloud-check:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,27 +23,25 @@ jobs:
         with:
           node-version: 24
 
-      - name: Check repository files
+      - name: Prepare tgcloud project
         run: |
-          echo "Repository checkout successful."
-          ls -la
+          npx --yes @tgcloud/cli init --no-git
+          cat > tgcloud.jsonc <<'EOF'
+          {
+            "static": {
+              "source": "public"
+            }
+          }
+          EOF
 
-      - name: Check CLI version
-        run: npx --yes @tgcloud/cli --version
-
-      - name: Check CLI commands
-        run: npx --yes @tgcloud/cli --help
-
-      - name: Verify token is configured
+      - name: Deploy Mini App
         env:
           TGCLOUD_TOKEN: ${{ secrets.TGCLOUD_TOKEN }}
         run: |
           if [ -z "$TGCLOUD_TOKEN" ]; then
-            echo "ERROR: TGCLOUD_TOKEN secret is missing."
+            echo "TGCLOUD_TOKEN secret is missing."
             exit 1
           fi
-          echo "TGCLOUD_TOKEN secret is available."
 
-      - name: Check initialization options
-        run: npx --yes @tgcloud/cli init --help
-        
+          npx --yes @tgcloud/cli push
+          
