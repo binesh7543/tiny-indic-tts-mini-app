@@ -1,5 +1,5 @@
 
-name: Deploy Telegram Mini App
+name: Deploy Tiny Indic TTS Mini App
 
 on:
   workflow_dispatch:
@@ -23,9 +23,11 @@ jobs:
         with:
           node-version: 24
 
-      - name: Prepare tgcloud project
+      - name: Initialize fresh tgcloud project
+        run: npx --yes @tgcloud/cli init --no-git
+
+      - name: Configure Mini App
         run: |
-          npx --yes @tgcloud/cli init --no-git
           cat > tgcloud.jsonc <<'EOF'
           {
             "static": {
@@ -34,14 +36,7 @@ jobs:
           }
           EOF
 
-      - name: Deploy Mini App
+      - name: Deploy and overwrite existing modules
         env:
           TGCLOUD_TOKEN: ${{ secrets.TGCLOUD_TOKEN }}
-        run: |
-          if [ -z "$TGCLOUD_TOKEN" ]; then
-            echo "TGCLOUD_TOKEN secret is missing."
-            exit 1
-          fi
-
-          npx --yes @tgcloud/cli push
-          
+        run: npx --yes @tgcloud/cli push --force
