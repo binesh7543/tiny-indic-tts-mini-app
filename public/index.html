@@ -4,100 +4,277 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tiny Indic TTS</title>
+  <meta name="theme-color" content="#f5f4ff">
+  <title>BhashaVaani — Indian Language Voice</title>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
     :root {
-      color-scheme: light dark;
-      --bg: var(--tg-theme-bg-color, #ffffff);
-      --text: var(--tg-theme-text-color, #202124);
-      --button: var(--tg-theme-button-color, #2481cc);
-      --button-text: var(--tg-theme-button-text-color, #ffffff);
-      --muted: var(--tg-theme-hint-color, #777777);
+      --bg: var(--tg-theme-bg-color, #f5f4ff);
+      --text: var(--tg-theme-text-color, #20234a);
+      --hint: var(--tg-theme-hint-color, #747995);
+      --primary: var(--tg-theme-button-color, #5655f5);
+      --primary-text: var(--tg-theme-button-text-color, #ffffff);
+      --card: var(--tg-theme-secondary-bg-color, #ffffff);
     }
 
     * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      padding: 24px 18px;
       min-height: 100vh;
-      background: var(--bg);
+      padding: 24px 16px;
+      font-family: system-ui, -apple-system, sans-serif;
       color: var(--text);
-      font-family: system-ui, sans-serif;
+      background:
+        radial-gradient(ellipse at 0% 0%, #a6e5ff 0, transparent 36%),
+        radial-gradient(ellipse at 100% 10%, #ffc5e8 0, transparent 35%),
+        radial-gradient(ellipse at 100% 100%, #9df2f0 0, transparent 35%),
+        radial-gradient(ellipse at 0% 100%, #c5b4ff 0, transparent 35%),
+        var(--bg);
     }
 
-    main {
-      max-width: 480px;
-      margin: 40px auto;
+    .app {
+      max-width: 470px;
+      margin: 0 auto;
+    }
+
+    .top {
+      text-align: center;
+      margin: 12px 0 24px;
+      color: var(--hint);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .card {
+      padding: 26px 20px;
+      border-radius: 26px;
+      background: var(--card);
+      box-shadow: 0 18px 60px #635bff16;
       text-align: center;
     }
 
     .logo {
-      font-size: 56px;
-      margin-bottom: 12px;
+      width: 92px;
+      height: 92px;
+      margin: 0 auto 12px;
+      display: grid;
+      place-items: center;
+      border-radius: 28px;
+      font-size: 49px;
+      background: linear-gradient(145deg, #a4e8ff, #e5c6ff 55%, #ffc7e8);
+      box-shadow: 0 10px 25px #7d65f322;
     }
 
-    h1 { font-size: 27px; }
-
-    p {
-      color: var(--muted);
-      line-height: 1.6;
+    h1 {
+      margin: 8px 0 4px;
+      font-size: clamp(29px, 8vw, 38px);
+      letter-spacing: -1.5px;
+      font-weight: 850;
+      background: linear-gradient(90deg, #315be9, #8c49e8, #ee7a9e);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
     }
 
-    button {
+    .subtitle {
+      margin: 0;
+      color: var(--hint);
+      font-size: 15px;
+    }
+
+    .intro {
+      margin: 22px 0;
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    .field {
+      text-align: left;
+      margin: 16px 0;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    select, textarea {
+      display: block;
       width: 100%;
-      margin-top: 20px;
-      padding: 15px;
-      border: 0;
-      border-radius: 12px;
-      background: var(--button);
-      color: var(--button-text);
-      font-size: 16px;
-      font-weight: 600;
+      border: 1px solid #a9a8ce44;
+      border-radius: 13px;
+      padding: 13px;
+      background: var(--bg);
+      color: var(--text);
+      font: inherit;
+      outline: none;
     }
 
-    #status {
-      margin-top: 20px;
+    textarea {
+      min-height: 105px;
+      resize: vertical;
+    }
+
+    select:focus, textarea:focus {
+      border-color: #7770f5;
+    }
+
+    .start {
+      width: 100%;
+      padding: 15px;
+      margin-top: 8px;
+      border: 0;
+      border-radius: 15px;
+      color: var(--primary-text);
+      background: linear-gradient(100deg, #278df5, #6654f5, #9b48ed);
+      font-size: 16px;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .start:active { transform: scale(.99); }
+
+    .status {
+      min-height: 24px;
+      margin: 15px 0 0;
+      color: var(--hint);
+      font-size: 13px;
       overflow-wrap: anywhere;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .feature {
+      padding: 13px 5px;
+      border-radius: 15px;
+      background: var(--bg);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .feature span {
+      display: block;
+      font-size: 23px;
+      margin-bottom: 5px;
+    }
+
+    footer {
+      padding: 22px 8px 8px;
+      text-align: center;
+      color: var(--hint);
+      font-size: 12px;
+      line-height: 1.8;
     }
   </style>
 </head>
 
 <body>
-  <main>
-    <div class="logo">🎙️</div>
-    <h1>Tiny Indic TTS</h1>
-    <p>Indian languages, one simple interface.</p>
+  <main class="app">
+    <div class="top">✦ YOUR LANGUAGE, YOUR VOICE ✦</div>
 
-    <button id="startButton">Open Mini App</button>
-    <p id="status">Loading Telegram Mini App...</p>
+    <section class="card">
+      <div class="logo" aria-label="Voice logo">🎙️</div>
+
+      <h1>BhashaVaani</h1>
+      <p class="subtitle">Indian Languages · Real Voice</p>
+
+      <p class="intro">
+        Words from your world, spoken in your language.
+        <br>
+        Start your multilingual voice journey.
+      </p>
+
+      <div class="field">
+        <label for="language">Choose your language</label>
+        <select id="language">
+          <option value="hi">हिन्दी — Hindi</option>
+          <option value="or">ଓଡ଼ିଆ — Odia</option>
+          <option value="bn">বাংলা — Bengali</option>
+          <option value="ta">தமிழ் — Tamil</option>
+          <option value="te">తెలుగు — Telugu</option>
+          <option value="mr">मराठी — Marathi</option>
+          <option value="gu">ગુજરાતી — Gujarati</option>
+          <option value="pa">ਪੰਜਾਬੀ — Punjabi</option>
+          <option value="en">English</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="message">Your text</label>
+        <textarea id="message"
+          maxlength="2000"
+          placeholder="Type something you want to hear..."></textarea>
+      </div>
+
+      <button class="start" id="startButton">
+        ✨ Get Started
+      </button>
+
+      <p class="status" id="status" role="status">
+        Your voice journey starts here.
+      </p>
+
+      <div class="features">
+        <div class="feature">
+          <span>🎙️</span>
+          Voice
+        </div>
+        <div class="feature">
+          <span>🌐</span>
+          Languages
+        </div>
+        <div class="feature">
+          <span>💜</span>
+          Made for India
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      BhashaVaani<br>
+      Powered by Telegram Mini Apps
+    </footer>
   </main>
 
   <script>
-    const app = window.Telegram?.WebApp;
-    const status = document.getElementById("status");
+    const telegram = window.Telegram?.WebApp;
     const button = document.getElementById("startButton");
+    const status = document.getElementById("status");
+    const message = document.getElementById("message");
+    const language = document.getElementById("language");
 
-    if (app) {
-      app.ready();
-      app.expand();
-
-      const user = app.initDataUnsafe?.user;
-      status.textContent = user
-        ? `Welcome, ${user.first_name}!`
-        : "Telegram Mini App is ready.";
-    } else {
-      status.textContent = "Opened in a normal browser.";
+    if (telegram) {
+      telegram.ready();
+      telegram.expand();
     }
 
     button.addEventListener("click", () => {
-      if (app) {
-        app.showAlert("Tiny Indic TTS Mini App is working!");
-      } else {
-        status.textContent = "The interface is working in browser mode.";
+      const text = message.value.trim();
+
+      if (!text) {
+        status.textContent = "Please enter some text first.";
+        message.focus();
+        return;
+      }
+
+      status.textContent =
+        "Interface ready. Voice generation backend is not connected yet.";
+
+      if (telegram?.showAlert) {
+        telegram.showAlert(
+          "BhashaVaani interface is working! Voice generation will be added next."
+        );
       }
     });
   </script>
