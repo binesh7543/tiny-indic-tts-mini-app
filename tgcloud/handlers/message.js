@@ -2,50 +2,28 @@
 import { api } from 'sdk';
 
 export default async function (message, ctx) {
-  const text = message.text;
-
-  // Handling cases where message has no text (e.g., photo, sticker)
-  if (!text) {
-    await api.sendMessage({
-      chat_id: message.chat.id,
-      text: '(No text received in message)',
-    });
-    return;
-  }
-
   try {
-    // 1. Dynamic import of the formatter module
-    const { formatEcho, formatUppercase } = await import('../lib/formatter.js');
-    
-    // 2. Dynamic import of the stats module
-    const { getStats } = await import('../lib/stats.js');
+    // message और ctx दोनों को मिलाकर JSON फॉर्मेट बना लिया
+    const debugPayload = {
+      message: message || null,
+      ctx: ctx || null
+    };
 
-    let replyText = '';
+    const debugText = JSON.stringify(debugPayload, null, 2);
 
-    // Logic based on input command
-    if (text.startsWith('/upper')) {
-      const cleanText = text.replace('/upper', '').trim();
-      replyText = formatUppercase(cleanText || 'empty');
-    } else {
-      const formatted = formatEcho(text);
-      const analytics = getStats(text);
-      
-      replyText = `${formatted}\n\n${analytics}`;
-    }
-
-    // Send response back via SDK
+    // Telegram पर सीधे भेजने के लिए SDK का वही तरीका
     await api.sendMessage({
-      chat_id: message.chat.id,
-      text: replyText,
-      parse_mode: 'Markdown',
+      chat_id: message.chat.id, // या अपनी फिक्स चैट आईडी यहाँ डाल सकता है
+      text: `<pre>${debugText}</pre>`,
+      parse_mode: 'HTML',
     });
 
   } catch (error) {
-    console.error('Error during dynamic module loading:', error);
+    console.error('Error during debugging:', error);
 
     await api.sendMessage({
       chat_id: message.chat.id,
-      text: '⚠️ Internal error loading dynamic modules.',
+      text: '⚠️ Error reflecting message and ctx data.',
     });
   }
 }
