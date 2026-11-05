@@ -1,7 +1,7 @@
 // handlers/message.js — runs on each `message` update.
 import { api } from 'sdk';
 
-export default async function (message, ctx) {
+export default async function ( ctx) {
   try {
     // message और ctx दोनों को मिलाकर JSON फॉर्मेट बना लिया
     const debugPayload = {
