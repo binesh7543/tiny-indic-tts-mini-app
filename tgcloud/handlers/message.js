@@ -9,47 +9,70 @@ export default async function (message, ctx) {
       return;
     }
 
-    // User ka bheja hua message (lowercase mein convert kar rahe hain taaki command match karna asaan ho)
     const incomingText = (message.text || '').trim().toLowerCase();
 
-    let replyText = '';
+    let cardText = '';
+    let inlineKeyboard = [];
 
-    // Commands ke hisaab se alag-alag response set karna
+    // Commands ke hisaab se card ka content aur buttons set karna
     if (incomingText === '/index' || incomingText === '/page1') {
-      replyText = [
-        'TINY INDIC TTS — PAGE 1',
-        '',
-        'Selected Page: index.html',
-        'Status: Loaded successfully',
-        '',
-        'Yahan aapka index.html ka content ya mini app link aayega.'
-      ].join('\n');
+      cardText = 
+        `╔═══════════════════════╗\n` +
+        `   🌟 **TINY INDIC TTS** 🌟   \n` +
+        `╚═══════════════════════╝\n\n` +
+        `📂 **Selected Page:** \`index.html\`\n` +
+        `🟢 **Status:** Loaded successfully\n\n` +
+        `_Description: Yeh aapka main Home/Index page card hai._`;
+
+      inlineKeyboard = [
+        [
+          { text: '📄 View Page 2', callback_data: '/page2' },
+          { text: '🌐 Open Mini App', url: 'https://your-mini-app-url.com' }
+        ]
+      ];
+
     } else if (incomingText === '/page2') {
-      replyText = [
-        'TINY INDIC TTS — PAGE 2',
-        '',
-        'Selected Page: page2.html',
-        'Status: Loaded successfully',
-        '',
-        'Yahan aapka page2.html ka content ya mini app link aayega.'
-      ].join('\n');
+      cardText = 
+        `╔═══════════════════════╗\n` +
+        `   🌟 **TINY INDIC TTS** 🌟   \n` +
+        `╚═══════════════════════╝\n\n` +
+        `📂 **Selected Page:** \`page2.html\`\n` +
+        `🟢 **Status:** Loaded successfully\n\n` +
+        `_Description: Yeh aapka secondary Page 2 card hai._`;
+
+      inlineKeyboard = [
+        [
+          { text: '🏠 Back to Index', callback_data: '/index' },
+          { text: '🌐 Open Mini App', url: 'https://your-mini-app-url.com' }
+        ]
+      ];
+
     } else {
-      // Agar koi aur message ya /start bheje
-      replyText = [
-        'TINY INDIC TTS — MENU',
-        '',
-        'Available Commands:',
-        '• /index (ya /page1) - Index page ke liye',
-        '• /page2 - Page 2 ke liye',
-        '',
-        'Received: ' + (message.text || '[Non-text message]')
-      ].join('\n');
+      cardText = 
+        `╔═══════════════════════╗\n` +
+        `   🌟 **TINY INDIC TTS** 🌟   \n` +
+        `╚═══════════════════════╝\n\n` +
+        `🤖 **Welcome to TTS Bot!**\n` +
+        `Kripya niche diye gaye buttons ya commands ka upyog karein:\n\n` +
+        `• /index - Index page card\n` +
+        `• /page2 - Page 2 card`;
+
+      inlineKeyboard = [
+        [
+          { text: '📂 Open Index', callback_data: '/index' },
+          { text: '📄 Open Page 2', callback_data: '/page2' }
+        ]
+      ];
     }
 
-    // Telegram par message bhejo
+    // Telegram par Card format (Markdown + Inline Keyboard) ke sath message bhejo
     await api.sendMessage({
       chat_id: chatId,
-      text: replyText
+      text: cardText,
+      parse_mode: 'Markdown',
+      reply_markup: {
+        inline_keyboard: inlineKeyboard
+      }
     });
 
   } catch (error) {
