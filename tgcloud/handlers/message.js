@@ -1,4 +1,3 @@
-
 import { api } from 'sdk';
 
 export default async function (message, ctx) {
@@ -10,30 +9,47 @@ export default async function (message, ctx) {
       return;
     }
 
-    // User ka bheja hua message
-    const incomingText =
-      message.text || '[Non-text message received]';
+    // User ka bheja hua message (lowercase mein convert kar rahe hain taaki command match karna asaan ho)
+    const incomingText = (message.text || '').trim().toLowerCase();
 
-    // Telegram par bhejne wala reply
-    const reply = [
-      'TINY INDIC TTS — MESSAGE TEST',
-      '',
-      'Received message:',
-      incomingText,
-      '',
-      'Mini App files detected:',
-      '1. index.html',
-      '2. page2.html',
-      '',
-      'Handler status: WORKING',
-      'SDK status: LOADED',
-      'URL: NOT SET'
-    ].join('\n');
+    let replyText = '';
 
-    // Usi Telegram chat mein reply bhejo
+    // Commands ke hisaab se alag-alag response set karna
+    if (incomingText === '/index' || incomingText === '/page1') {
+      replyText = [
+        'TINY INDIC TTS — PAGE 1',
+        '',
+        'Selected Page: index.html',
+        'Status: Loaded successfully',
+        '',
+        'Yahan aapka index.html ka content ya mini app link aayega.'
+      ].join('\n');
+    } else if (incomingText === '/page2') {
+      replyText = [
+        'TINY INDIC TTS — PAGE 2',
+        '',
+        'Selected Page: page2.html',
+        'Status: Loaded successfully',
+        '',
+        'Yahan aapka page2.html ka content ya mini app link aayega.'
+      ].join('\n');
+    } else {
+      // Agar koi aur message ya /start bheje
+      replyText = [
+        'TINY INDIC TTS — MENU',
+        '',
+        'Available Commands:',
+        '• /index (ya /page1) - Index page ke liye',
+        '• /page2 - Page 2 ke liye',
+        '',
+        'Received: ' + (message.text || '[Non-text message]')
+      ].join('\n');
+    }
+
+    // Telegram par message bhejo
     await api.sendMessage({
       chat_id: chatId,
-      text: reply
+      text: replyText
     });
 
   } catch (error) {
