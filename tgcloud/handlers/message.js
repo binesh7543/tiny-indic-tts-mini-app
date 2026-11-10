@@ -1,29 +1,20 @@
-// handlers/message.js — runs on each `message` update.
-import { api } from 'sdk';
+export default async function (message) {
+  const chatId = message.chat.id;
 
-export default async function ( message,ctx) {
-  try {
-    // message और ctx दोनों को मिलाकर JSON फॉर्मेट बना लिया
-    const debugPayload = {
-      message: message || null,
-      ctx: ctx || null
-    };
+  const reply = [
+    "TINY INDIC TTS — MINI APP FILE TEST",
+    "",
+    "Files shown in Mini App Files:",
+    "1. index.html",
+    "2. page2.html",
+    "",
+    "Handler reply: WORKING",
+    "HTML URL: NOT SET",
+    "Next test: Check both HTML pages."
+  ].join("\n");
 
-    const debugText = JSON.stringify(debugPayload, null, 2);
-
-    // Telegram पर सीधे भेजने के लिए SDK का वही तरीका
-    await api.sendMessage({
-      chat_id: message.chat.id, // या अपनी फिक्स चैट आईडी यहाँ डाल सकता है
-      text: `<pre>${debugText}</pre>`,
-      parse_mode: 'HTML',
-    });
-
-  } catch (error) {
-    console.error('Error during debugging:', error);
-
-    await api.sendMessage({
-      chat_id: message.chat.id,
-      text: '⚠️ Error reflecting message and ctx data.',
-    });
-  }
+  await api.sendMessage({
+    chat_id: chatId,
+    text: reply
+  });
 }
